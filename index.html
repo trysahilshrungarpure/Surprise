@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise for Shreya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --accent: #e63946;
+            --soft-pink: #fce1e4;
+            --gold: #ffd700;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+            background: var(--soft-pink);
+            overflow: hidden;
+        }
+
+        /* --- 🚩 BIRTHDAY BANNER STYLES --- */
+        .banner-container {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 5;
+            padding-top: 10px;
+        }
+
+        .flag {
+            width: 40px;
+            height: 60px;
+            background: var(--accent);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 80%, 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: swing 3s ease-in-out infinite alternate;
+            transform-origin: top;
+        }
+
+        .flag:nth-child(even) { background: #4fc1e9; animation-delay: 0.5s; }
+        .flag:nth-child(3n) { background: var(--gold); color: #000; animation-delay: 1s; }
+
+        @keyframes swing {
+            from { transform: rotate(-5deg); }
+            to { transform: rotate(5deg); }
+        }
+
+        /* --- 🎈 BALLOON STYLES --- */
+        .balloon {
+            position: fixed;
+            bottom: -150px;
+            width: 60px;
+            height: 75px;
+            border-radius: 50%;
+            z-index: 1;
+            animation: floatUp var(--speed) linear infinite;
+        }
+
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            width: 1px;
+            height: 40px;
+            background: rgba(0,0,0,0.15);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-125vh) rotate(20deg); opacity: 0; }
+        }
+
+        /* --- STAGE 1: THE GRID PAGE --- */
+        .page-one {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hb-main {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4rem;
+            color: white;
+            -webkit-text-stroke: 2px #000;
+            text-shadow: 6px 6px 0px var(--accent);
+            text-align: center;
+            line-height: 0.9;
+            margin: 0;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .date-chip {
+            background: #000;
+            color: #fff;
+            padding: 8px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 4px 4px 0 var(--accent);
+        }
+
+        .btn-magic {
+            background: var(--accent);
+            color: white;
+            border: 4px solid #000;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 15px;
+            box-shadow: 6px 6px 0 #000;
+            cursor: pointer;
+            font-family: 'Fredoka One', cursive;
+            position: relative;
+            z-index: 20;
+        }
+
+        /* Loading & Final Stage Styles (Compressed for brevity) */
+        #loading-overlay, #final-stage { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        #loading-overlay { background: radial-gradient(circle, #24243e, #0f0c29); z-index: 1000; color: white; }
+        #final-stage { background: #000; z-index: 1100; color: #fff; padding: 20px; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 300px; padding: 2px; border-radius: 20px; }
+        .card-inner { background: #1a1a2e; border-radius: 18px; padding: 25px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="banner-container">
+        <div class="flag"></div>
+        <div class="flag"></div>
+        <div class="flag"></div>
+        <div class="flag"></div>
+        <div class="flag"></div>
+        <div class="flag"></div>
+        <div class="flag"></div>
+</div>
+    <div id="balloon-container"></div>
+
+    <div class="page-one">
+        <h1 class="hb-main">HAPPY<br>BIRTHDAY</h1>
+        <div class="date-chip">★ 2 February 2026 ★</div>
+        
+        <button class="btn-magic" onclick="triggerSequence()">CLICK FOR MAGIC</button>
+
+        <div style="margin-top: 50px; display: flex; align-items: center; gap: 10px;">
+            <div style="width: 50px; height: 50px; background: #fff; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">😊</div>
+            <div style="background: var(--accent); color: white; padding: 10px 30px; border-radius: 30px; border: 2px solid #000; font-style: italic; font-weight: bold;">Shreya</div>
+        </div>
+    </div>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="font-family: 'Pacifico';">Crafting your special moment...</h2>
+    </div>
+
+    <div id="final-stage">
+        <div class="card">
+            <div class="card-inner">
+                <div style="font-size: 60px;">🎂</div>
+                <h2 style="font-family: 'Pacifico';">Happy Birthday, Shreya!</h2>
+                <p>May your day be filled with smiles, love, and little moments that make your heart happy 💖</p>
+                <button onclick="location.reload()" style="background: none; border: 1px solid #fff; color: #fff; padding: 8px 20px; border-radius: 20px; cursor: pointer;">Replay ↺</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createBalloons() {
+            const container = document.getElementById('balloon-container');
+            const colors = ['#ff8fa3', '#ff4d4d', '#ffd700', '#4fc1e9', '#a0d468'];
+            for(let i = 0; i < 15; i++) {
+                const b = document.createElement('div');
+                b.className = 'balloon';
+                b.style.left = Math.random() * 100 + "vw";
+                b.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                b.style.setProperty('--speed', (Math.random() * 4 + 6) + "s");
+                b.style.animationDelay = Math.random() * 5 + "s";
+                container.appendChild(b);
+            }
+        }
+        createBalloons();
+
+        function triggerSequence() {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            setTimeout(() => {
+                document.getElementById('loading-overlay').style.display = 'flex';
+                setTimeout(() => {
+                    document.getElementById('loading-overlay').style.display = 'none';
+                    document.getElementById('final-stage').style.display = 'flex';
+                    var end = Date.now() + (4 * 1000);
+                    (function frame() {
+                        confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } });
+                        confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                    }());
+                }, 2500);
+            }, 800);
+        }
+    </script>
+</body>
+          </html>
+          
